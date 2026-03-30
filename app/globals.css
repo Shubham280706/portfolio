@@ -1,0 +1,137 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  background:
+    radial-gradient(circle at 16% 18%, rgba(255, 227, 196, 0.34), transparent 24%),
+    radial-gradient(circle at 82% 26%, rgba(214, 225, 255, 0.24), transparent 26%),
+    radial-gradient(circle at 50% 72%, rgba(231, 214, 255, 0.26), transparent 24%),
+    linear-gradient(180deg, #ffffff 0%, #fffdfb 48%, #fffaf7 100%);
+}
+
+::selection {
+  background: rgba(122, 141, 255, 0.22);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply overflow-x-hidden;
+  }
+
+  a,
+  button,
+  input,
+  textarea {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .bg-grain {
+    position: relative;
+  }
+
+  .bg-ambient {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .bg-ambient::before,
+  .bg-ambient::after {
+    content: "";
+    position: absolute;
+    inset: auto;
+    pointer-events: none;
+    filter: blur(40px);
+    opacity: 0.75;
+    z-index: -2;
+    will-change: transform;
+  }
+
+  .bg-ambient::before {
+    top: 8%;
+    left: 8%;
+    width: 34rem;
+    height: 34rem;
+    border-radius: 9999px;
+    background: radial-gradient(circle, rgba(255, 227, 196, 0.42) 0%, rgba(255, 227, 196, 0) 68%);
+    animation: ambientFloatOne 18s ease-in-out infinite alternate;
+  }
+
+  .bg-ambient::after {
+    right: 10%;
+    bottom: 12%;
+    width: 32rem;
+    height: 32rem;
+    border-radius: 9999px;
+    background: radial-gradient(circle, rgba(170, 188, 255, 0.32) 0%, rgba(170, 188, 255, 0) 70%);
+    animation: ambientFloatTwo 22s ease-in-out infinite alternate;
+  }
+
+  .bg-grain::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.14;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.22) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(23, 19, 17, 0.035) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.85), transparent);
+  }
+
+  .section-shell {
+    @apply relative rounded-[2rem] border border-border/80 bg-white/70 shadow-soft backdrop-blur-sm;
+  }
+
+  .gpu-layer {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+}
+
+@keyframes ambientFloatOne {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(3rem, 2rem, 0) scale(1.08);
+  }
+  100% {
+    transform: translate3d(-1rem, 4rem, 0) scale(0.96);
+  }
+}
+
+@keyframes ambientFloatTwo {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-3rem, -2rem, 0) scale(1.06);
+  }
+  100% {
+    transform: translate3d(2rem, -4rem, 0) scale(0.94);
+  }
+}
