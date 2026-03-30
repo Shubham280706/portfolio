@@ -54,6 +54,8 @@ const bentoContainer = {
   }
 };
 
+const premiumEase = [0.16, 1, 0.3, 1] as const;
+
 const bentoCard = {
   hidden: {
     opacity: 0,
@@ -66,13 +68,13 @@ const bentoCard = {
     scale: 1,
     transition: {
       duration: 0.7,
-      ease: [0.16, 1, 0.3, 1]
+      ease: premiumEase
     }
   }
 };
 
 const BentoCard = forwardRef<
-  HTMLArticleElement,
+  HTMLElement,
   {
     children: ReactNode;
     className: string;

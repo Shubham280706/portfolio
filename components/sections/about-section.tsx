@@ -1,21 +1,8 @@
 "use client";
 
-import { DM_Mono, DM_Serif_Display } from "next/font/google";
 import { useEffect, useRef, useState } from "react";
 
 import styles from "./about-section.module.css";
-
-const serif = DM_Serif_Display({
-  subsets: ["latin"],
-  weight: ["400"],
-  variable: "--about-font-serif"
-});
-
-const mono = DM_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--about-font-mono"
-});
 
 const valueCards = [
   {
@@ -159,9 +146,11 @@ export function AboutSection() {
     <section
       ref={sectionRef}
       id="about"
-      className={`${styles.about} ${serif.variable} ${mono.variable}`}
+      className={styles.about}
       style={
         {
+          "--about-font-serif": '"Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif',
+          "--about-font-mono": '"SFMono-Regular", "SF Mono", "Roboto Mono", "Menlo", "Consolas", monospace',
           "--color-bg": "#FAF9F6",
           "--color-surface": "#ffffff",
           "--color-border": "rgba(0,0,0,0.07)",
