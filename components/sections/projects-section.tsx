@@ -1,28 +1,52 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
-import { useState } from "react";
+import { ArrowUpRight, GitBranch } from "lucide-react";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 
 const ease = [0.23, 1, 0.32, 1] as const;
 
-const projects = [
+type ProjectCard = {
+  id: string;
+  title: string;
+  category: string;
+  blurb: string;
+  description: string;
+  features: string[];
+  stack: string[];
+  demoHref?: string;
+  repoHref?: string;
+  image?: string;
+  gallery?: string[];
+  accent: string;
+  glow: string;
+};
+
+const projects: ProjectCard[] = [
   {
     id: "ai-trading-assistant",
     title: "AI Trading Assistant",
-    category: "AI Systems",
-    blurb: "A real-time assistant for signals, risk checks, and conversational trade analysis.",
+    category: "Fintech + AI",
+    blurb:
+      "An Indian equities workspace that combines technical indicators, AI recommendations, watchlists, and live market context.",
     description:
-      "A premium trading workflow that combines market summaries, AI-guided signal interpretation, and configurable guardrails so traders can move faster without losing context.",
+      "Built as TradeWithS, this product helps traders review NSE and BSE names through a cleaner decision surface. It pairs technical signals, AI-assisted summaries, latest news, and watchlist flows so users can scan opportunities without bouncing between tools.",
     features: [
-      "Live market snapshots with AI commentary",
-      "Risk scoring before order execution",
-      "Conversation-driven strategy exploration"
+      "Market cockpit with search, trending stocks, and watchlist preview",
+      "AI recommendation panel backed by RSI, MA50, MA200, and MACD context",
+      "Stock detail views with price charts, news sentiment, and Google login"
     ],
-    stack: ["Next.js", "TypeScript", "OpenAI", "WebSockets"],
-    href: "#",
-    accent: "from-[#dbe6ff] via-[#aec7ff] to-[#f7f5ff]",
-    glow: "rgba(122,141,255,0.20)"
+    stack: ["Next.js", "TypeScript", "Tailwind CSS", "OpenAI"],
+    demoHref: "https://ai-trading-assistent.vercel.app",
+    repoHref: "https://github.com/Shubham280706/ai-trading-assistent",
+    image: "/images/ai-trading-assistant-dashboard.png",
+    gallery: [
+      "/images/ai-trading-assistant-stock.png",
+      "/images/ai-trading-assistant-news.png"
+    ],
+    accent: "from-[#0b1425] via-[#11243d] to-[#18344c]",
+    glow: "rgba(97, 211, 192, 0.28)"
   },
   {
     id: "fintech-dashboard",
@@ -37,26 +61,29 @@ const projects = [
       "Responsive widgets with saved custom views"
     ],
     stack: ["React", "Tailwind CSS", "Framer Motion", "PostgreSQL"],
-    href: "#",
     accent: "from-[#dcfbf4] via-[#c5f0e8] to-[#f4fbf8]",
     glow: "rgba(106,209,194,0.18)"
   },
   {
     id: "solar-inverter-checker",
-    title: "Solar Inverter Checker",
-    category: "Energy Tools",
-    blurb: "A diagnostic tool for field engineers to validate inverter health and output performance.",
+    title: "Solar Inverter Intelligence",
+    category: "Energy Ops",
+    blurb:
+      "A monitoring workspace for inverter fleets with risk scoring, telemetry snapshots, AI narrative summaries, and maintenance guidance.",
     description:
-      "Designed for fast on-site verification, this product translates hardware telemetry into readable system health, maintenance guidance, and historical performance trends.",
+      "Built as a failure-prediction platform for solar operations teams, this dashboard turns inverter telemetry into a readable command center. It highlights critical units, fleet-level health, explainability views, and RAG-style operator support so teams can prioritize intervention faster.",
     features: [
-      "Instant fault-state and voltage checks",
-      "Service logs with historical output comparisons",
-      "Mobile-friendly field workflow for technicians"
+      "Fleet overview with inverter cards, degradation signals, and risk scoring",
+      "Narrative and explainability surfaces for operator decision support",
+      "RAG copilot workflow for maintenance questions and prioritization"
     ],
-    stack: ["Next.js", "Node.js", "Charts", "IoT APIs"],
-    href: "#",
-    accent: "from-[#fff1d8] via-[#ffd9a6] to-[#fff9ef]",
-    glow: "rgba(236,169,83,0.18)"
+    stack: ["Next.js", "TypeScript", "Tailwind CSS", "AI Workflows"],
+    demoHref: "https://solar-inverter-five.vercel.app",
+    repoHref: "https://github.com/Shubham280706/Solar-Inverter",
+    image: "/images/solar-inverter-dashboard.png",
+    gallery: ["/images/solar-inverter-narrative.png"],
+    accent: "from-[#050913] via-[#0b1020] to-[#12192e]",
+    glow: "rgba(120, 104, 255, 0.18)"
   },
   {
     id: "face-emotion-detector",
@@ -71,18 +98,37 @@ const projects = [
       "Session logs for demos and usability review"
     ],
     stack: ["React", "Python", "TensorFlow", "Computer Vision"],
-    href: "#",
     accent: "from-[#fde1f8] via-[#e1d2ff] to-[#fbf7ff]",
     glow: "rgba(176,138,255,0.18)"
   }
-] as const;
+];
 
 export function ProjectsSection() {
-  const [activeId, setActiveId] = useState<(typeof projects)[number]["id"]>(
-    projects[0].id
-  );
+  const [activeId, setActiveId] = useState<ProjectCard["id"]>(projects[0].id);
 
   const activeProject = projects.find((project) => project.id === activeId) ?? projects[0];
+  const projectImages = [activeProject.image, ...(activeProject.gallery ?? [])].filter(
+    (image): image is string => Boolean(image)
+  );
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+
+  useEffect(() => {
+    setActiveImageIndex(0);
+  }, [activeId]);
+
+  useEffect(() => {
+    if (projectImages.length <= 1) {
+      return;
+    }
+
+    const interval = window.setInterval(() => {
+      setActiveImageIndex((current) => (current + 1) % projectImages.length);
+    }, 2400);
+
+    return () => {
+      window.clearInterval(interval);
+    };
+  }, [projectImages.length]);
 
   return (
     <section id="projects" className="relative z-10 mt-8">
@@ -169,15 +215,15 @@ export function ProjectsSection() {
             <div className="relative min-h-[38rem] overflow-hidden rounded-[1.8rem] border border-black/8 bg-white/64 shadow-soft">
               <motion.div
                 aria-hidden
-                className="pointer-events-none absolute inset-y-0 left-[-35%] z-20 w-[42%] bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.1)_18%,rgba(255,255,255,0.8)_50%,rgba(255,255,255,0.14)_82%,transparent)] opacity-90 mix-blend-screen"
+                className="pointer-events-none absolute inset-y-0 left-[-35%] z-20 w-[42%] bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.04)_18%,rgba(255,255,255,0.3)_50%,rgba(255,255,255,0.08)_82%,transparent)] opacity-45 mix-blend-screen"
                 animate={{ x: ["0%", "420%"] }}
-                transition={{ duration: 3.6, repeat: Infinity, ease: "linear" }}
+                transition={{ duration: 4.8, repeat: Infinity, ease: "linear" }}
               />
               <motion.div
                 aria-hidden
-                className="pointer-events-none absolute inset-0 z-10 bg-[linear-gradient(120deg,transparent_0%,rgba(255,255,255,0.08)_46%,transparent_58%)] opacity-70"
+                className="pointer-events-none absolute inset-0 z-10 bg-[linear-gradient(120deg,transparent_0%,rgba(255,255,255,0.03)_46%,transparent_58%)] opacity-35"
                 animate={{ backgroundPosition: ["-220% 0", "220% 0"] }}
-                transition={{ duration: 5.2, repeat: Infinity, ease: "linear" }}
+                transition={{ duration: 6.8, repeat: Infinity, ease: "linear" }}
                 style={{ backgroundSize: "220% 100%" }}
               />
               <AnimatePresence mode="wait">
@@ -200,16 +246,40 @@ export function ProjectsSection() {
                         background: `radial-gradient(circle at 18% 18%, ${activeProject.glow}, rgba(255,255,255,0) 30%)`
                       }}
                     />
-                    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.18),rgba(255,255,255,0)_24%,rgba(255,255,255,0.02)_54%,rgba(255,255,255,0.82)_100%)]" />
-                    <div className="absolute inset-x-6 top-6 flex items-center justify-between text-[0.72rem] font-medium uppercase tracking-[0.22em] text-foreground/48">
+                    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.14),rgba(255,255,255,0)_22%,rgba(255,255,255,0.02)_52%,rgba(255,255,255,0.32)_100%)]" />
+                    {projectImages.length > 0 ? (
+                      <div className="absolute inset-x-8 top-20 h-[20rem] overflow-hidden rounded-[1.5rem] border border-white/12 bg-[#0b1320] shadow-[0_28px_70px_rgba(4,12,24,0.24)] sm:h-[22rem] lg:h-[23rem]">
+                        <AnimatePresence mode="wait">
+                          <motion.div
+                            key={`${activeProject.id}-${projectImages[activeImageIndex]}`}
+                            initial={{ opacity: 0.2, scale: 1.04 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0.2, scale: 0.98 }}
+                            transition={{ duration: 0.55, ease }}
+                            className="absolute inset-0"
+                          >
+                            <Image
+                              src={projectImages[activeImageIndex]}
+                              alt={`${activeProject.title} preview ${activeImageIndex + 1}`}
+                              fill
+                              className="object-cover object-top"
+                              sizes="(max-width: 1024px) 100vw, 50vw"
+                              priority
+                            />
+                          </motion.div>
+                        </AnimatePresence>
+                        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,14,26,0.01),rgba(8,14,26,0.08)_62%,rgba(8,14,26,0.18)_100%)]" />
+                      </div>
+                    ) : null}
+                    <div className="absolute inset-x-6 top-6 flex items-center justify-between text-[0.72rem] font-medium uppercase tracking-[0.22em] text-white">
                       <span>{activeProject.category}</span>
                       <span>{activeProject.stack[0]}</span>
                     </div>
                     <div className="absolute inset-x-6 bottom-6 max-w-[24rem]">
-                      <h3 className="text-[2.4rem] font-semibold leading-[0.94] tracking-[-0.06em] text-foreground sm:text-[3rem]">
+                      <h3 className="text-[2.4rem] font-semibold leading-[0.94] tracking-[-0.06em] text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.28)] sm:text-[3rem]">
                         {activeProject.title}
                       </h3>
-                      <p className="mt-3 text-base leading-7 text-foreground/62 sm:text-lg">
+                      <p className="mt-3 text-base leading-7 text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.22)] sm:text-lg">
                         {activeProject.blurb}
                       </p>
                     </div>
@@ -252,13 +322,30 @@ export function ProjectsSection() {
                         ))}
                       </div>
 
-                      <a
-                        href={activeProject.href}
-                        className="mt-6 inline-flex items-center gap-2 rounded-full border border-black/10 bg-foreground px-4 py-2.5 text-sm font-medium text-white transition-transform duration-300 hover:-translate-y-0.5"
-                      >
-                        View Project
-                        <ArrowUpRight className="h-4 w-4" />
-                      </a>
+                      <div className="mt-6 flex flex-wrap gap-3">
+                        {activeProject.demoHref ? (
+                          <a
+                            href={activeProject.demoHref}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-foreground px-4 py-2.5 text-sm font-medium text-white transition-transform duration-300 hover:-translate-y-0.5"
+                          >
+                            Live Demo
+                            <ArrowUpRight className="h-4 w-4" />
+                          </a>
+                        ) : null}
+                        {activeProject.repoHref ? (
+                          <a
+                            href={activeProject.repoHref}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/84 px-4 py-2.5 text-sm font-medium text-foreground transition-transform duration-300 hover:-translate-y-0.5"
+                          >
+                            GitHub
+                            <GitBranch className="h-4 w-4" />
+                          </a>
+                        ) : null}
+                      </div>
                     </div>
                   </div>
                 </motion.article>

@@ -36,7 +36,7 @@ import { developerName, skills, socialLinks } from "@/data/site";
 import { useScrollProgress } from "@/hooks/use-scroll-progress";
 
 const landingNav = ["Home", "About", "Work", "Blog", "Hire Me"];
-const contactEmail = "hello@shubhamshah.dev";
+const contactEmail = "hello@shubhamshah.in";
 const rolePhrases = [
   "Full Stack Developer",
   "Fintech",
@@ -543,7 +543,7 @@ export function PortfolioPage() {
                 </div>
               </div>
 
-              <div className="flex h-full min-h-[27rem] flex-col justify-between pt-8">
+              <div className="flex h-full min-h-[27rem] flex-col pt-8">
                 <div className="relative z-0 space-y-3">
                   <div className="overflow-hidden">
                     <motion.h3
@@ -568,10 +568,11 @@ export function PortfolioPage() {
                   whileInView={{ opacity: 1, y: 0, scale: 1 }}
                   viewport={{ once: true, amount: 0.25 }}
                   transition={{ duration: 0.7, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
-                  className="relative z-10 mx-auto mt-4 flex h-[28rem] w-full items-end justify-center overflow-hidden"
+                  className="relative z-10 mx-auto mt-6 flex h-[28rem] w-full items-end justify-center overflow-hidden"
                 >
                   <div className="gpu-layer absolute inset-x-[6%] top-[8%] h-[80%] rounded-full bg-[radial-gradient(circle_at_50%_20%,rgba(255,255,255,0.98),rgba(255,255,255,0)_74%)] blur-xl" />
-                  <div className="relative h-[28rem] w-[26rem] overflow-hidden">
+                  <div className="pointer-events-none absolute inset-x-[10%] bottom-[4%] h-[22%] bg-[radial-gradient(circle_at_50%_0%,rgba(244,244,248,0),rgba(244,244,248,0.82)_54%,rgba(244,244,248,0.96)_78%)] blur-2xl" />
+                  <div className="relative h-[28rem] w-[26rem] overflow-hidden [mask-image:radial-gradient(78%_88%_at_50%_46%,#000_58%,transparent_100%)] [-webkit-mask-image:radial-gradient(78%_88%_at_50%_46%,#000_58%,transparent_100%)]">
                     <Image
                       src="/images/shubham-profile.png"
                       alt="Shubham Shah portrait"
@@ -588,9 +589,9 @@ export function PortfolioPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.45 }}
                   transition={{ duration: 0.55, delay: 0.16, ease: "easeOut" }}
-                  className="space-y-1 pt-2"
+                  className="relative z-20 mt-3 space-y-10 pt-1"
                 >
-                  <p className="font-mono text-sm text-foreground/56">
+                  <p className="font-mono text-sm text-foreground/66">
                     A journey, told in moments.
                   </p>
                   <p className="text-[2rem] font-semibold leading-none text-foreground">

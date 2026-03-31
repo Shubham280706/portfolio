@@ -183,7 +183,7 @@ export function AboutSection() {
               <span className={styles.icon}>📍</span> India · Remote Ready
             </p>
             <p>
-              <span className={styles.icon}>✉️</span> hello@shubhamshah.dev
+              <span className={styles.icon}>✉️</span> hello@shubhamshah.in
             </p>
             <p>
               <span className={styles.icon}>⏱</span> Time-zone agnostic
@@ -268,7 +268,7 @@ export function AboutSection() {
               execution.
             </p>
             <div className={styles.ctaRow}>
-              <a href="mailto:hello@shubhamshah.dev" className={styles.ctaPrimary}>
+              <a href="mailto:hello@shubhamshah.in" className={styles.ctaPrimary}>
                 Let&apos;s Connect →
               </a>
               <a href="#work" className={styles.ctaGhost}>
