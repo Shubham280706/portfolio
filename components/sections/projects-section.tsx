@@ -98,8 +98,10 @@ const projects: ProjectCard[] = [
       "Session logs for demos and usability review"
     ],
     stack: ["React", "Python", "TensorFlow", "Computer Vision"],
-    accent: "from-[#fde1f8] via-[#e1d2ff] to-[#fbf7ff]",
-    glow: "rgba(176,138,255,0.18)"
+    image: "/images/face-emotion-detector-light.png",
+    gallery: ["/images/face-emotion-detector-dark.png"],
+    accent: "from-[#f6ecdd] via-[#efe4cf] to-[#faf5ec]",
+    glow: "rgba(171, 147, 96, 0.2)"
   }
 ];
 
@@ -121,11 +123,16 @@ export function ProjectsSection() {
       return;
     }
 
+    const initialTimeout = window.setTimeout(() => {
+      setActiveImageIndex((current) => (current + 1) % projectImages.length);
+    }, 700);
+
     const interval = window.setInterval(() => {
       setActiveImageIndex((current) => (current + 1) % projectImages.length);
-    }, 2400);
+    }, 2200);
 
     return () => {
+      window.clearTimeout(initialTimeout);
       window.clearInterval(interval);
     };
   }, [projectImages.length]);
@@ -252,10 +259,10 @@ export function ProjectsSection() {
                         <AnimatePresence mode="wait">
                           <motion.div
                             key={`${activeProject.id}-${projectImages[activeImageIndex]}`}
-                            initial={{ opacity: 0.2, scale: 1.04 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0.2, scale: 0.98 }}
-                            transition={{ duration: 0.55, ease }}
+                            initial={{ opacity: 0, scale: 1.018, filter: "blur(10px)" }}
+                            animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                            exit={{ opacity: 0, scale: 0.992, filter: "blur(8px)" }}
+                            transition={{ duration: 0.75, ease }}
                             className="absolute inset-0"
                           >
                             <Image
