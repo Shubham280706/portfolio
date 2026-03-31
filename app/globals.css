@@ -16,10 +16,11 @@ body {
 
 body {
   background:
-    radial-gradient(circle at 16% 18%, rgba(255, 227, 196, 0.34), transparent 24%),
-    radial-gradient(circle at 82% 26%, rgba(214, 225, 255, 0.24), transparent 26%),
-    radial-gradient(circle at 50% 72%, rgba(231, 214, 255, 0.26), transparent 24%),
-    linear-gradient(180deg, #ffffff 0%, #fffdfb 48%, #fffaf7 100%);
+    radial-gradient(circle at 12% 14%, rgba(255, 205, 150, 0.58), transparent 28%),
+    radial-gradient(circle at 86% 18%, rgba(177, 206, 255, 0.42), transparent 30%),
+    radial-gradient(circle at 50% 58%, rgba(255, 244, 215, 0.3), transparent 34%),
+    radial-gradient(circle at 52% 82%, rgba(255, 218, 194, 0.22), transparent 26%),
+    linear-gradient(180deg, #fffefb 0%, #fff7ee 48%, #fff2ea 100%);
 }
 
 ::selection {
@@ -71,22 +72,22 @@ body {
   }
 
   .bg-ambient::before {
-    top: 8%;
-    left: 8%;
-    width: 34rem;
-    height: 34rem;
+    top: 4%;
+    left: 4%;
+    width: 40rem;
+    height: 40rem;
     border-radius: 9999px;
-    background: radial-gradient(circle, rgba(255, 227, 196, 0.42) 0%, rgba(255, 227, 196, 0) 68%);
+    background: radial-gradient(circle, rgba(255, 196, 134, 0.54) 0%, rgba(255, 196, 134, 0) 70%);
     animation: ambientFloatOne 18s ease-in-out infinite alternate;
   }
 
   .bg-ambient::after {
-    right: 10%;
-    bottom: 12%;
-    width: 32rem;
-    height: 32rem;
+    right: 4%;
+    bottom: 8%;
+    width: 38rem;
+    height: 38rem;
     border-radius: 9999px;
-    background: radial-gradient(circle, rgba(170, 188, 255, 0.32) 0%, rgba(170, 188, 255, 0) 70%);
+    background: radial-gradient(circle, rgba(155, 187, 255, 0.46) 0%, rgba(155, 187, 255, 0) 72%);
     animation: ambientFloatTwo 22s ease-in-out infinite alternate;
   }
 
@@ -95,7 +96,7 @@ body {
     position: absolute;
     inset: 0;
     pointer-events: none;
-    opacity: 0.14;
+    opacity: 0.1;
     background-image:
       linear-gradient(rgba(255, 255, 255, 0.22) 1px, transparent 1px),
       linear-gradient(90deg, rgba(23, 19, 17, 0.035) 1px, transparent 1px);

@@ -1,7 +1,21 @@
 "use client";
 
-import { forwardRef, type ReactNode, useEffect, useState } from "react";
-import { AnimatePresence, motion, useSpring } from "framer-motion";
+import {
+  forwardRef,
+  type ReactNode,
+  useEffect,
+  useRef,
+  useState,
+  type MouseEvent as ReactMouseEvent
+} from "react";
+import {
+  AnimatePresence,
+  motion,
+  useMotionValue,
+  useScroll,
+  useSpring,
+  useTransform
+} from "framer-motion";
 import Image from "next/image";
 import {
   ArrowRight,
@@ -18,7 +32,7 @@ import { AboutSection } from "@/components/sections/about-section";
 import { DotGlobe } from "@/components/sections/dot-globe";
 import { SkillsSection } from "@/components/sections/skills-section";
 import { ProjectsSection } from "@/components/sections/projects-section";
-import { developerName, skills } from "@/data/site";
+import { developerName, skills, socialLinks } from "@/data/site";
 import { useScrollProgress } from "@/hooks/use-scroll-progress";
 
 const landingNav = ["Home", "About", "Work", "Blog", "Hire Me"];
@@ -80,12 +94,65 @@ const BentoCard = forwardRef<
     className: string;
   }
 >(function BentoCard({ children, className }, ref) {
+  const cardRef = useRef<HTMLElement | null>(null);
+  const rotateX = useMotionValue(0);
+  const rotateY = useMotionValue(0);
+  const smoothRotateX = useSpring(rotateX, {
+    stiffness: 180,
+    damping: 18,
+    mass: 0.6
+  });
+  const smoothRotateY = useSpring(rotateY, {
+    stiffness: 180,
+    damping: 18,
+    mass: 0.6
+  });
+
+  const setRefs = (node: HTMLElement | null) => {
+    cardRef.current = node;
+
+    if (typeof ref === "function") {
+      ref(node);
+      return;
+    }
+
+    if (ref) {
+      ref.current = node;
+    }
+  };
+
+  const handlePointerMove = (event: ReactMouseEvent<HTMLElement>) => {
+    const rect = cardRef.current?.getBoundingClientRect();
+
+    if (!rect) {
+      return;
+    }
+
+    const x = (event.clientX - rect.left) / rect.width;
+    const y = (event.clientY - rect.top) / rect.height;
+
+    rotateX.set((0.5 - y) * 7);
+    rotateY.set((x - 0.5) * 7);
+  };
+
+  const handlePointerLeave = () => {
+    rotateX.set(0);
+    rotateY.set(0);
+  };
+
   return (
     <motion.article
-      ref={ref}
+      ref={setRefs}
       variants={bentoCard}
       whileHover={{ scale: 1.01, y: -2 }}
+      onMouseMove={handlePointerMove}
+      onMouseLeave={handlePointerLeave}
       transition={{ type: "spring", stiffness: 220, damping: 24 }}
+      style={{
+        rotateX: smoothRotateX,
+        rotateY: smoothRotateY,
+        transformStyle: "preserve-3d"
+      }}
       className={className}
     >
       {children}
@@ -97,13 +164,29 @@ export function PortfolioPage() {
   const [copied, setCopied] = useState(false);
   const [roleIndex, setRoleIndex] = useState(0);
   const [currentTime, setCurrentTime] = useState("");
+  const profileCardRef = useRef<HTMLElement | null>(null);
   const scrollProgress = useScrollProgress();
+  const { scrollYProgress: profileCardScrollYProgress } = useScroll({
+    target: profileCardRef,
+    offset: ["start end", "end start"]
+  });
 
   const scaleX = useSpring(scrollProgress, {
     stiffness: 120,
     damping: 22,
     mass: 0.2
   });
+  const profileHeadingX = useTransform(
+    profileCardScrollYProgress,
+    [0, 0.5, 1],
+    ["-14%", "0%", "14%"]
+  );
+  const profileSubheadingX = useTransform(
+    profileCardScrollYProgress,
+    [0, 0.5, 1],
+    ["14%", "0%", "-14%"]
+  );
+
   const handleCopyEmail = async () => {
     try {
       await navigator.clipboard.writeText(contactEmail);
@@ -193,15 +276,15 @@ export function PortfolioPage() {
 
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-10 z-0 mx-auto h-[760px] w-[96%] rounded-full bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.96),rgba(255,242,223,0.55)_32%,rgba(255,255,255,0)_72%)] blur-2xl"
+        className="pointer-events-none absolute inset-x-0 top-6 z-0 mx-auto h-[820px] w-[98%] rounded-full bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.98),rgba(255,232,198,0.72)_30%,rgba(255,214,170,0.24)_52%,rgba(255,255,255,0)_76%)] blur-2xl"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute bottom-[5.75rem] left-1/2 z-0 h-[92px] w-[58%] -translate-x-1/2 rounded-[100%] bg-[radial-gradient(ellipse_at_center,rgba(154,92,245,0.8)_0%,rgba(196,136,255,0.42)_42%,rgba(255,255,255,0)_78%)] blur-[18px]"
+        className="pointer-events-none absolute bottom-[5.5rem] left-1/2 z-0 h-[116px] w-[62%] -translate-x-1/2 rounded-[100%] bg-[radial-gradient(ellipse_at_center,rgba(129,150,255,0.68)_0%,rgba(255,181,124,0.32)_34%,rgba(255,255,255,0)_78%)] blur-[22px]"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute bottom-[4.9rem] left-1/2 z-0 h-[128px] w-[74%] -translate-x-1/2 rounded-[100%] border-t border-white/70 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0)_0%,rgba(255,255,255,0.08)_40%,rgba(255,255,255,0.32)_58%,rgba(255,255,255,0)_76%)]"
+        className="pointer-events-none absolute bottom-[4.8rem] left-1/2 z-0 h-[144px] w-[78%] -translate-x-1/2 rounded-[100%] border-t border-white/80 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0)_0%,rgba(255,245,232,0.16)_42%,rgba(255,255,255,0.42)_60%,rgba(255,255,255,0)_78%)]"
       />
 
       <div className="bg-ambient bg-grain relative z-10 mx-auto flex min-h-screen max-w-[1440px] flex-col px-4 py-5 sm:px-6 lg:px-10">
@@ -212,7 +295,7 @@ export function PortfolioPage() {
           className="mb-4 flex items-center justify-between gap-3"
         >
           <div className="min-w-[7rem] font-display text-[2.2rem] leading-none text-foreground">
-            {developerName}
+            SS
           </div>
 
           <nav className="hidden items-center gap-1 rounded-[1.2rem] border border-black/8 bg-white/72 p-1.5 shadow-soft backdrop-blur md:flex">
@@ -240,13 +323,13 @@ export function PortfolioPage() {
 
         <section
           id="top"
-          className="relative flex flex-1 flex-col items-center justify-center overflow-hidden pb-24 pt-14 text-center sm:pt-20"
+          className="relative mb-16 flex min-h-[calc(100vh-6rem)] w-full flex-col items-center justify-center overflow-hidden px-2 py-16 text-center sm:mb-24 sm:py-20"
         >
           <motion.div
             initial={{ opacity: 0, y: 24, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.9, delay: 0.82, ease: [0.22, 1, 0.36, 1] }}
-            className="relative z-10 mx-auto flex max-w-6xl flex-col items-center pb-28"
+            className="relative z-10 mx-auto flex max-w-6xl translate-y-6 flex-col items-center sm:translate-y-8"
           >
             <motion.div
               aria-hidden
@@ -261,7 +344,7 @@ export function PortfolioPage() {
               animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
               transition={{ duration: 1.05, delay: 0.96, ease: [0.22, 1, 0.36, 1] }}
             >
-              <h1 className="max-w-100xl font-display text-[2.1rem] font-medium leading-[1.08] tracking-[-0.02em] text-foreground sm:text-[3rem] lg:text-[4rem]">
+              <h1 className="max-w-100xl font-display text-[1.8rem] font-medium leading-[1.08] tracking-[-0.02em] text-foreground sm:text-[2.6rem] lg:text-[3.4rem]">
                 <span className="block">
                   <RevealText
                     text="I don't just build apps — I craft systems that think,"
@@ -317,7 +400,7 @@ export function PortfolioPage() {
               initial={{ opacity: 0, y: 26 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1.28, ease: "easeOut" }}
-              className="mt-8 flex flex-col items-center gap-3 sm:flex-row"
+              className="mt-20 flex flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:justify-center"
             >
               <Magnetic strength={14}>
                 <Button
@@ -356,6 +439,29 @@ export function PortfolioPage() {
                   <span className="font-medium">{copied ? "Email copied" : contactEmail}</span>
                 </motion.button>
               </Magnetic>
+
+              <div className="flex items-center gap-2">
+                {socialLinks.map((link) => {
+                  const Icon = link.icon;
+
+                  return (
+                    <Magnetic key={link.label} strength={14}>
+                      <motion.a
+                        href={link.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label={link.label}
+                        className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-black/10 bg-white/82 text-foreground shadow-soft backdrop-blur transition-all hover:bg-white"
+                        whileHover={{ y: -4, scale: 1.04 }}
+                        whileTap={{ scale: 0.98 }}
+                        transition={{ type: "spring", stiffness: 260, damping: 16 }}
+                      >
+                        <Icon className="h-5 w-5" />
+                      </motion.a>
+                    </Magnetic>
+                  );
+                })}
+              </div>
             </motion.div>
 
             <motion.div
@@ -387,27 +493,28 @@ export function PortfolioPage() {
                 <MapPin className="h-5 w-5 text-foreground" />
               </div>
 
-              <div className="grid h-full gap-6 pt-16 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
+              <div className="grid h-full gap-8 pt-16 lg:grid-cols-[0.78fr_1.22fr] lg:items-center">
                 <motion.div
                   initial={{ opacity: 0, x: -26 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true, amount: 0.35 }}
                   transition={{ duration: 0.65, ease: "easeOut" }}
-                  className="space-y-4 pb-1"
+                  className="space-y-5 self-center pb-1"
                 >
+                  <h3 className="font-body text-[2rem] font-bold leading-none text-foreground">
+                    <RevealText text="Time-Zone Agnostic" delay={0.12} />
+                  </h3>
                   <motion.p
                     initial={{ opacity: 0, y: 18 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, amount: 0.6 }}
                     transition={{ duration: 0.55, delay: 0.08, ease: "easeOut" }}
-                    className="max-w-sm font-mono text-[0.95rem] leading-8 text-foreground/66"
+                    className="max-w-md font-mono text-[0.95rem] leading-8 text-foreground/66"
                   >
                     Productive collaboration across global teams, without time
-                    barriers.
+                    barriers. Async-friendly communication, reliable overlap,
+                    and smooth handoffs across time zones.
                   </motion.p>
-                  <h3 className="font-body text-[2rem] font-semibold leading-none text-foreground">
-                    <RevealText text="Time-Zone Agnostic" delay={0.12} />
-                  </h3>
                 </motion.div>
 
                 <motion.div
@@ -415,6 +522,7 @@ export function PortfolioPage() {
                   whileInView={{ opacity: 1, x: 0, scale: 1 }}
                   viewport={{ once: true, amount: 0.25 }}
                   transition={{ duration: 0.75, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+                  className="flex items-center justify-center"
                 >
                   <DotGlobe />
                 </motion.div>
@@ -422,21 +530,25 @@ export function PortfolioPage() {
             </BentoCard>
 
             <BentoCard
+              ref={profileCardRef}
               className="relative h-full self-start overflow-hidden rounded-[1.9rem] border border-[#d8dbf3]/80 bg-[radial-gradient(circle_at_42%_18%,rgba(214,220,255,0.55),rgba(255,255,255,0)_38%),radial-gradient(circle_at_78%_82%,rgba(255,236,242,0.36),rgba(255,255,255,0)_26%),linear-gradient(180deg,rgba(255,255,255,0.88),rgba(244,244,248,0.92))] p-6 shadow-soft backdrop-blur lg:row-span-2"
             >
-              <div className="absolute left-5 top-5 inline-flex h-12 w-12 items-center justify-center rounded-[1.1rem] border border-black/10 bg-white/70 shadow-soft">
-                <UserRound className="h-5 w-5 text-foreground" />
+              <div className="flex items-start justify-between gap-4">
+                <div className="inline-flex h-12 w-12 items-center justify-center rounded-[1.1rem] border border-black/10 bg-white/70 shadow-soft">
+                  <UserRound className="h-5 w-5 text-foreground" />
+                </div>
+
+                <div className="hidden items-center gap-2 rounded-[0.95rem] border border-black/5 bg-white/70 px-3 py-2 shadow-soft backdrop-blur md:inline-flex">
+                  <span className="font-mono text-xs font-semibold text-foreground/80">Hei, Good Afternoon</span>
+                </div>
               </div>
 
-              <div className="absolute right-5 top-5 hidden items-center gap-2 rounded-[0.95rem] border border-black/5 bg-white/70 px-3 py-2 shadow-soft backdrop-blur md:inline-flex">
-                <span className="font-mono text-xs font-semibold text-foreground/80">Hei, Good Afternoon</span>
-              </div>
-
-              <div className="flex h-full min-h-[27rem] flex-col justify-between pt-16">
+              <div className="flex h-full min-h-[27rem] flex-col justify-between pt-8">
                 <div className="relative z-0 space-y-3">
                   <div className="overflow-hidden">
                     <motion.h3
                       className="gpu-layer w-max whitespace-nowrap font-display text-[4rem] leading-[0.9] tracking-[-0.05em] text-foreground/92"
+                      style={{ x: profileHeadingX }}
                     >
                       Full Stack Developer  Full Stack Developer  Full Stack Developer
                     </motion.h3>
@@ -444,6 +556,7 @@ export function PortfolioPage() {
                   <div className="overflow-hidden">
                     <motion.p
                       className="gpu-layer w-max whitespace-nowrap font-mono text-xs uppercase tracking-[0.32em] text-foreground/44 sm:text-sm"
+                      style={{ x: profileSubheadingX }}
                     >
                       UI/UX Developer  UI/UX Developer  UI/UX Developer
                     </motion.p>
@@ -455,16 +568,16 @@ export function PortfolioPage() {
                   whileInView={{ opacity: 1, y: 0, scale: 1 }}
                   viewport={{ once: true, amount: 0.25 }}
                   transition={{ duration: 0.7, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
-                  className="relative z-10 mx-auto -mt-8 flex h-[23rem] w-full items-end justify-center"
+                  className="relative z-10 mx-auto mt-4 flex h-[28rem] w-full items-end justify-center overflow-hidden"
                 >
-                  <div className="gpu-layer absolute inset-x-[8%] top-[8%] h-[80%] rounded-full bg-[radial-gradient(circle_at_50%_20%,rgba(255,255,255,0.98),rgba(255,255,255,0)_74%)] blur-xl" />
-                  <div className="relative h-[23rem] w-[18rem] overflow-visible">
+                  <div className="gpu-layer absolute inset-x-[6%] top-[8%] h-[80%] rounded-full bg-[radial-gradient(circle_at_50%_20%,rgba(255,255,255,0.98),rgba(255,255,255,0)_74%)] blur-xl" />
+                  <div className="relative h-[28rem] w-[26rem] overflow-hidden">
                     <Image
                       src="/images/shubham-profile.png"
                       alt="Shubham Shah portrait"
                       fill
-                      className="object-contain object-bottom grayscale drop-shadow-[0_20px_50px_rgba(23,19,17,0.2)]"
-                      sizes="(max-width: 1024px) 260px, 320px"
+                      className="object-contain object-bottom grayscale drop-shadow-[0_20px_50px_rgba(23,19,17,0.2)] scale-150"
+                      sizes="(max-width: 1024px) 420px, 500px"
                       priority
                     />
                   </div>
@@ -554,6 +667,26 @@ export function PortfolioPage() {
                 </motion.div>
               </div>
             </BentoCard>
+          </motion.div>
+        </section>
+
+        <section className="relative z-10 mt-20 px-2 sm:mt-24">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.45 }}
+            transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+            className="mx-auto max-w-5xl text-center"
+          >
+            <p className="font-mono text-[0.72rem] uppercase tracking-[0.34em] text-foreground/42 sm:text-xs">
+              Profile
+            </p>
+            <h2 className="mt-4 font-display text-[2.8rem] leading-[0.94] tracking-[-0.06em] text-foreground sm:text-[4rem]">
+              About <span className="italic text-[#6d80ff]">Me</span>
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl font-mono text-sm leading-7 text-foreground/58 sm:text-base">
+              A closer look at how I think, build, and bring clarity to digital products.
+            </p>
           </motion.div>
         </section>
 

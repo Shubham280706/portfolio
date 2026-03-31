@@ -8,10 +8,9 @@ import {
   SiNodedotjs,
   SiPostgresql,
   SiReact,
-  SiTypescript,
-  SiX
+  SiTypescript
 } from "react-icons/si";
-import { FaAws, FaLinkedin } from "react-icons/fa6";
+import { FaAws, FaInstagram, FaLinkedin } from "react-icons/fa6";
 
 import type {
   ExperienceItem,
@@ -169,7 +168,19 @@ export const testimonials: Testimonial[] = [
 ];
 
 export const socialLinks: SocialLink[] = [
-  { label: "GitHub", href: "https://github.com/", icon: SiGithub },
-  { label: "LinkedIn", href: "https://linkedin.com/", icon: FaLinkedin },
-  { label: "Twitter", href: "https://x.com/", icon: SiX }
+  {
+    label: "GitHub",
+    href: "https://github.com/repos?q=owner%3A%40me",
+    icon: SiGithub
+  },
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/shubham-shah-65aa66373?utm_source=share_via&utm_content=profile&utm_medium=member_ios",
+    icon: FaLinkedin
+  },
+  {
+    label: "Instagram",
+    href: "https://instagram.com/",
+    icon: FaInstagram
+  }
 ];
