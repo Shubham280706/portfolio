@@ -36,7 +36,8 @@ import { developerName, skills, socialLinks } from "@/data/site";
 import { useScrollProgress } from "@/hooks/use-scroll-progress";
 
 const landingNav = ["Home", "About", "Work", "Blog", "Hire Me"];
-const contactEmail = "hello@shubhamshah.in";
+const contactEmail = "shubhamshah9105@gmail.com";
+const phoneNumber = "9426149105";
 const rolePhrases = [
   "Full Stack Developer",
   "Fintech",
@@ -577,7 +578,7 @@ export function PortfolioPage() {
                       src="/images/shubham-profile.png"
                       alt="Shubham Shah portrait"
                       fill
-                      className="object-contain object-bottom grayscale drop-shadow-[0_20px_50px_rgba(23,19,17,0.2)] scale-150"
+                      className="object-contain object-bottom grayscale-[35%] drop-shadow-[0_20px_50px_rgba(23,19,17,0.2)] scale-150"
                       sizes="(max-width: 1024px) 420px, 500px"
                       priority
                     />
@@ -696,6 +697,129 @@ export function PortfolioPage() {
           <SkillsSection />
         </div>
         <ProjectsSection />
+
+        <section className="relative z-10 px-2 pb-16 pt-12 sm:pb-24 sm:pt-16">
+          <motion.div
+            initial={{ opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            className="relative overflow-hidden rounded-[2rem] border border-black/8 bg-[radial-gradient(circle_at_top_left,rgba(197,221,255,0.55),rgba(255,255,255,0)_26%),radial-gradient(circle_at_bottom_right,rgba(255,222,196,0.55),rgba(255,255,255,0)_30%),linear-gradient(180deg,rgba(255,255,255,0.96),rgba(249,246,241,0.92))] px-6 py-10 shadow-soft backdrop-blur sm:px-8 sm:py-14 lg:px-12"
+          >
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-x-[8%] top-0 h-32 rounded-full bg-[radial-gradient(circle_at_center,rgba(109,128,255,0.18),rgba(255,255,255,0)_72%)] blur-2xl"
+            />
+
+            <div className="relative grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-end">
+              <div className="max-w-2xl">
+                <p className="font-mono text-[0.72rem] uppercase tracking-[0.34em] text-foreground/42 sm:text-xs">
+                  Let&apos;s Connect
+                </p>
+                <h2 className="mt-4 font-display text-[2.8rem] leading-[0.95] tracking-[-0.06em] text-foreground sm:text-[4rem]">
+                  Have something in mind?
+                  <span className="block italic text-[#6d80ff]">Let&apos;s build it together.</span>
+                </h2>
+                <p className="mt-5 max-w-xl font-mono text-sm leading-7 text-foreground/62 sm:text-base">
+                  Open to freelance builds, product collaborations, and full-time roles where thoughtful design and solid engineering both matter.
+                </p>
+
+                <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                  <Magnetic strength={16}>
+                    <Button
+                      asChild
+                      className="h-12 rounded-full bg-black/80 px-6 text-sm text-white hover:bg-black"
+                      size="lg"
+                    >
+                      <motion.a
+                        href={`mailto:${contactEmail}`}
+                        whileHover={{ y: -3, scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        transition={{ type: "spring", stiffness: 260, damping: 18 }}
+                      >
+                        Start a conversation
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </motion.a>
+                    </Button>
+                  </Magnetic>
+
+                  <Magnetic strength={16}>
+                    <motion.button
+                      type="button"
+                      onClick={handleCopyEmail}
+                      className="inline-flex h-12 items-center justify-center gap-2.5 rounded-full border border-black/10 bg-white/82 px-5 text-sm text-foreground shadow-soft backdrop-blur transition-all hover:bg-white"
+                      whileHover={{ y: -3, scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      transition={{ type: "spring", stiffness: 260, damping: 18 }}
+                    >
+                      {copied ? <Check className="h-4 w-4 text-sage" /> : <Copy className="h-4 w-4" />}
+                      <span className="font-medium">{copied ? "Email copied" : "Copy email"}</span>
+                    </motion.button>
+                  </Magnetic>
+                </div>
+              </div>
+
+              <motion.div
+                initial={{ opacity: 0, x: 24 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.7, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+                className="grid gap-4 sm:grid-cols-2"
+              >
+                <div className="rounded-[1.5rem] border border-black/8 bg-white/72 p-5 shadow-soft backdrop-blur">
+                  <p className="font-mono text-[0.7rem] uppercase tracking-[0.28em] text-foreground/42">
+                    Email
+                  </p>
+                  <p className="mt-4 break-all text-lg font-semibold text-foreground">
+                    {contactEmail}
+                  </p>
+                  <p className="mt-2 font-mono text-sm leading-6 text-foreground/56">
+                    Best for project enquiries, collabs, and role discussions.
+                  </p>
+                </div>
+
+                <div className="rounded-[1.5rem] border border-black/8 bg-white/72 p-5 shadow-soft backdrop-blur">
+                  <p className="font-mono text-[0.7rem] uppercase tracking-[0.28em] text-foreground/42">
+                    Phone
+                  </p>
+                  <p className="mt-4 break-all text-lg font-semibold text-foreground">
+                    {phoneNumber}
+                  </p>
+                  <p className="mt-2 font-mono text-sm leading-6 text-foreground/56">
+                    Direct touch for urgent calls and WhatsApp messages.
+                  </p>
+                </div>
+
+                <div className="rounded-[1.5rem] border border-black/8 bg-white/72 p-5 shadow-soft backdrop-blur">
+                  <p className="font-mono text-[0.7rem] uppercase tracking-[0.28em] text-foreground/42">
+                    Socials
+                  </p>
+                  <div className="mt-4 flex flex-wrap gap-3">
+                    {socialLinks.map((link) => {
+                      const Icon = link.icon;
+
+                      return (
+                        <motion.a
+                          key={link.label}
+                          href={link.href}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-black/10 bg-white text-foreground shadow-soft transition-all hover:-translate-y-1 hover:bg-black hover:text-white"
+                          whileTap={{ scale: 0.97 }}
+                        >
+                          <Icon className="h-[18px] w-[18px]" />
+                        </motion.a>
+                      );
+                    })}
+                  </div>
+                  <p className="mt-4 font-mono text-sm leading-6 text-foreground/56">
+                    Reach out where you&apos;re most comfortable and I&apos;ll get back to you soon.
+                  </p>
+                </div>
+              </motion.div>
+            </div>
+          </motion.div>
+        </section>
       </div>
     </main>
   );
