@@ -50,7 +50,7 @@ const projects: ProjectCard[] = [
   },
   {
     id: "fintech-dashboard",
-    title: "Fintech Dashboard",
+    title: "Money Expense Tracker (Full Stack)",
     category: "Fintech UX",
     blurb: "A multi-panel operations dashboard for balances, cash flow, fraud monitoring, and reporting.",
     description:
@@ -61,6 +61,7 @@ const projects: ProjectCard[] = [
       "Responsive widgets with saved custom views"
     ],
     stack: ["React", "Tailwind CSS", "Framer Motion", "PostgreSQL"],
+    demoHref: "https://fintech-dashboard-expense-tracker.vercel.app",
     accent: "from-[#dcfbf4] via-[#c5f0e8] to-[#f4fbf8]",
     glow: "rgba(106,209,194,0.18)"
   },
@@ -98,6 +99,8 @@ const projects: ProjectCard[] = [
       "Session logs for demos and usability review"
     ],
     stack: ["React", "Python", "TensorFlow", "Computer Vision"],
+    demoHref: "https://face-emotion-detector-nine.vercel.app",
+    repoHref: "https://github.com/Shubham280706/Face-emotion-detector",
     image: "/images/face-emotion-detector-light.png",
     gallery: ["/images/face-emotion-detector-dark.png"],
     accent: "from-[#f6ecdd] via-[#efe4cf] to-[#faf5ec]",
