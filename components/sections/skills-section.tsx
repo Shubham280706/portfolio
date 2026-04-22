@@ -7,7 +7,7 @@ import {
   useMotionValue,
   useTransform
 } from "framer-motion";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 type OrbitSkill = {
   name: string;
@@ -98,6 +98,10 @@ function OrbitRing({
               transition={{ duration: 0.28, ease }}
               onMouseEnter={() => onHoverStart(skill.name)}
               onMouseLeave={onHoverEnd}
+              onFocus={() => onHoverStart(skill.name)}
+              onBlur={onHoverEnd}
+              onTouchStart={(e) => { e.stopPropagation(); onHoverStart(skill.name); }}
+              onTouchEnd={onHoverEnd}
               className={`absolute left-1/2 top-1/2 z-10 inline-flex items-center gap-2 rounded-full border px-6 py-3 text-[1.05rem] font-semibold tracking-[-0.04em] shadow-[0_10px_28px_rgba(23,19,17,0.08)] transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] sm:px-7 sm:py-3.5 sm:text-[1.1rem] ${
                 active
                   ? "border-[#1a1a18] bg-[#1a1a18] text-white shadow-[0_18px_40px_rgba(23,19,17,0.18)]"
@@ -129,7 +133,11 @@ export function SkillsSection() {
     []
   );
 
-  const helperText = hoveredSkill || "Hover to pause and explore";
+  const [isTouch, setIsTouch] = useState(false);
+  useEffect(() => {
+    setIsTouch(window.matchMedia("(hover: none) and (pointer: coarse)").matches);
+  }, []);
+  const helperText = hoveredSkill || (isTouch ? "Tap to explore" : "Hover to pause and explore");
 
   return (
     <section id="skills" className="relative z-10 pb-12 pt-8">

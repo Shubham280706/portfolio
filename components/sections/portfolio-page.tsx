@@ -96,6 +96,7 @@ const BentoCard = forwardRef<
   }
 >(function BentoCard({ children, className }, ref) {
   const cardRef = useRef<HTMLElement | null>(null);
+  const isTouchRef = useRef(false);
   const rotateX = useMotionValue(0);
   const rotateY = useMotionValue(0);
   const smoothRotateX = useSpring(rotateX, {
@@ -108,6 +109,10 @@ const BentoCard = forwardRef<
     damping: 18,
     mass: 0.6
   });
+
+  useEffect(() => {
+    isTouchRef.current = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+  }, []);
 
   const setRefs = (node: HTMLElement | null) => {
     cardRef.current = node;
@@ -123,6 +128,7 @@ const BentoCard = forwardRef<
   };
 
   const handlePointerMove = (event: ReactMouseEvent<HTMLElement>) => {
+    if (isTouchRef.current) return;
     const rect = cardRef.current?.getBoundingClientRect();
 
     if (!rect) {
@@ -165,6 +171,7 @@ export function PortfolioPage() {
   const [copied, setCopied] = useState(false);
   const [roleIndex, setRoleIndex] = useState(0);
   const [currentTime, setCurrentTime] = useState("");
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const profileCardRef = useRef<HTMLElement | null>(null);
   const scrollProgress = useScrollProgress();
   const { scrollYProgress: profileCardScrollYProgress } = useScroll({
@@ -293,33 +300,89 @@ export function PortfolioPage() {
           initial={{ opacity: 0, y: -18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.65, delay: 0.65, ease: "easeOut" }}
-          className="mb-4 flex items-center justify-between gap-3"
+          className="relative mb-4 flex items-center justify-between gap-3"
         >
           <div className="min-w-[7rem] font-display text-[2.2rem] leading-none text-foreground">
             SS
           </div>
 
           <nav className="hidden items-center gap-1 rounded-[1.2rem] border border-black/8 bg-white/72 p-1.5 shadow-soft backdrop-blur md:flex">
-            {landingNav.map((item, index) => (
-              <a
-                key={item}
-                href="#top"
-                className={`rounded-xl px-4 py-2 text-sm font-medium transition-colors ${index === 0
-                  ? "bg-white text-sage"
-                  : "text-foreground/80 hover:bg-white/80"
-                  }`}
-              >
-                {item}
-              </a>
-            ))}
+            {landingNav.map((item, index) => {
+              const navHrefs = ["#top", "#about", "#skills", "#projects", "#top", "#top"];
+              return (
+                <a
+                  key={item}
+                  href={navHrefs[index] ?? "#top"}
+                  className={`rounded-xl px-4 py-2 text-sm font-medium transition-colors ${index === 0
+                    ? "bg-white text-sage"
+                    : "text-foreground/80 hover:bg-white/80"
+                    }`}
+                >
+                  {item}
+                </a>
+              );
+            })}
             <Button asChild className="h-9 rounded-xl px-4 text-sm">
-              <a href="#top">Book a Call</a>
+              <a href="#contact">Book a Call</a>
             </Button>
           </nav>
 
-          <div className="rounded-[1.1rem] border border-black/8 bg-white/72 px-4 py-2.5 font-mono text-xs uppercase tracking-[0.16em] text-foreground/72 shadow-soft backdrop-blur sm:text-sm">
-            {currentTime || "--:-- --"}
+          <div className="flex items-center gap-2">
+            <div className="rounded-[1.1rem] border border-black/8 bg-white/72 px-4 py-2.5 font-mono text-xs uppercase tracking-[0.16em] text-foreground/72 shadow-soft backdrop-blur sm:text-sm">
+              {currentTime || "--:-- --"}
+            </div>
+
+            <button
+              type="button"
+              aria-label={mobileNavOpen ? "Close menu" : "Open menu"}
+              onClick={() => setMobileNavOpen((v) => !v)}
+              className="flex h-10 w-10 items-center justify-center rounded-[1rem] border border-black/8 bg-white/72 shadow-soft backdrop-blur md:hidden"
+            >
+              <span className="flex flex-col gap-[5px]">
+                <span
+                  className={`block h-[1.5px] w-5 rounded-full bg-foreground transition-all duration-300 ${mobileNavOpen ? "translate-y-[6.5px] rotate-45" : ""}`}
+                />
+                <span
+                  className={`block h-[1.5px] w-5 rounded-full bg-foreground transition-all duration-300 ${mobileNavOpen ? "opacity-0" : ""}`}
+                />
+                <span
+                  className={`block h-[1.5px] w-5 rounded-full bg-foreground transition-all duration-300 ${mobileNavOpen ? "-translate-y-[6.5px] -rotate-45" : ""}`}
+                />
+              </span>
+            </button>
           </div>
+
+          <AnimatePresence>
+            {mobileNavOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: -12, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -8, scale: 0.97 }}
+                transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                className="absolute left-4 right-4 top-[4.5rem] z-[200] flex flex-col gap-1 rounded-[1.4rem] border border-black/8 bg-white/95 p-3 shadow-[0_8px_40px_rgba(23,19,17,0.12)] backdrop-blur md:hidden"
+              >
+                {landingNav.map((item, index) => {
+                  const navHrefs = ["#top", "#about", "#skills", "#projects", "#top", "#top"];
+                  return (
+                    <a
+                      key={item}
+                      href={navHrefs[index] ?? "#top"}
+                      onClick={() => setMobileNavOpen(false)}
+                      className={`rounded-xl px-4 py-3 text-sm font-medium transition-colors ${index === 0
+                        ? "bg-foreground/5 text-sage"
+                        : "text-foreground/80 hover:bg-foreground/5"
+                        }`}
+                    >
+                      {item}
+                    </a>
+                  );
+                })}
+                <Button asChild className="mt-1 h-10 rounded-xl text-sm">
+                  <a href="#contact" onClick={() => setMobileNavOpen(false)}>Book a Call</a>
+                </Button>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.header>
 
         <section
@@ -573,7 +636,7 @@ export function PortfolioPage() {
                 >
                   <div className="gpu-layer absolute inset-x-[6%] top-[8%] h-[80%] rounded-full bg-[radial-gradient(circle_at_50%_20%,rgba(255,255,255,0.98),rgba(255,255,255,0)_74%)] blur-xl" />
                   <div className="pointer-events-none absolute inset-x-[10%] bottom-[4%] h-[22%] bg-[radial-gradient(circle_at_50%_0%,rgba(244,244,248,0),rgba(244,244,248,0.82)_54%,rgba(244,244,248,0.96)_78%)] blur-2xl" />
-                  <div className="relative h-[28rem] w-[26rem] overflow-hidden [mask-image:radial-gradient(78%_88%_at_50%_46%,#000_58%,transparent_100%)] [-webkit-mask-image:radial-gradient(78%_88%_at_50%_46%,#000_58%,transparent_100%)]">
+                  <div className="relative h-[28rem] w-full max-w-[26rem] overflow-hidden [mask-image:radial-gradient(78%_88%_at_50%_46%,#000_58%,transparent_100%)] [-webkit-mask-image:radial-gradient(78%_88%_at_50%_46%,#000_58%,transparent_100%)]">
                     <Image
                       src="/images/shubham-profile.png"
                       alt="Shubham Shah portrait"
@@ -698,7 +761,7 @@ export function PortfolioPage() {
         </div>
         <ProjectsSection />
 
-        <section className="relative z-10 px-2 pb-16 pt-12 sm:pb-24 sm:pt-16">
+        <section id="contact" className="relative z-10 px-2 pb-16 pt-12 sm:pb-24 sm:pt-16">
           <motion.div
             initial={{ opacity: 0, y: 28 }}
             whileInView={{ opacity: 1, y: 0 }}

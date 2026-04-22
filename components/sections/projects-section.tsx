@@ -274,7 +274,6 @@ export function ProjectsSection() {
                               fill
                               className="object-cover object-top"
                               sizes="(max-width: 1024px) 100vw, 50vw"
-                              priority
                             />
                           </motion.div>
                         </AnimatePresence>

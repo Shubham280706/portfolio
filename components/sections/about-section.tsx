@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 import styles from "./about-section.module.css";
 
@@ -165,12 +166,13 @@ export function AboutSection() {
       <div className={styles.container}>
         <aside className={styles.sidebar}>
           <div className={styles.photoWrap}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               id="profile-photo"
               src="/images/about-profile.png"
               alt="Shubham Shah"
+              fill
               className={styles.photo}
+              sizes="(max-width: 767px) 180px, 260px"
             />
             <span className={styles.availability} aria-hidden />
           </div>
